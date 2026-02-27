@@ -6,7 +6,7 @@ pipeline {
     }
 
     stages {
-        
+
         stage('git checkout') {
             steps {
                 git url : 'https://github.com/akhilonteru/spring-petclinic.git',
@@ -36,7 +36,7 @@ pipeline {
         }
 
         stage('Quality Gate') {
-                            post {
+                            steps {
                                 success {
                                     waitForQualityGate abortPipeline: true
                                 }
