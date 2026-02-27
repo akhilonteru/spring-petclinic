@@ -6,12 +6,14 @@ pipeline {
     }
 
     stages {
+        
         stage('git checkout') {
             steps {
                 git url : 'https://github.com/akhilonteru/spring-petclinic.git',
                 branch : 'main'
             }
         }
+
         stage('build and scan'){
             steps {
                 withCredentials([string(credentialsId:'sonar_id', variable: 'SONAR_TOKEN')]){
@@ -25,6 +27,20 @@ pipeline {
                 }
                 }
             }
+        }
+
+        stage('Test Report') {
+            steps {
+                junit 'target/surefire-reports/*.xml'
+            }
+        }
+
+        stage('Quality Gate') {
+                            post {
+                                success {
+                                    waitForQualityGate abortPipeline: true
+                                }
+                            }
         }
     }
 }
